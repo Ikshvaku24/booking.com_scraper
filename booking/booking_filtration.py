@@ -3,7 +3,6 @@ This file will include instance methods.
 That will be reponsible to interact with our website.
 After we have some results to apply filtrations.
 """
-import re
 from selenium.webdriver.remote.webdriver import WebDriver
 from selenium.webdriver.support.ui import WebDriverWait
 
@@ -25,7 +24,7 @@ class BookingFiltration:
     )   
         for _ in range(3):
             try:
-                star_child_elements = star_filtration_box.find_elements_by_css_selector('*')
+                star_child_elements = star_filtration_box.find_elements(By.CSS_SELECTOR,'*')
                 break
             except StaleElementReferenceException:
                 star_filtration_box = WebDriverWait(self.driver, 10).until(
@@ -37,7 +36,15 @@ class BookingFiltration:
         for star_val in star_vals:
             for star_element in star_child_elements:
                 s_letter = 's' if star_val>1 else ''
-                if str(star_element.get_attribute('innerHTML')).strip() == f'{star_val} star{s_letter}':
+                #staleness
+                for _ in range(3):
+                    try:
+                        star_element_innerHTML = star_element.get_attribute('innerHTML')
+                        break
+                    except StaleElementReferenceException:
+                        star_element_innerHTML = star_element.get_attribute('innerHTML')
+                        
+                if str(star_element_innerHTML).strip() == f'{star_val} star{s_letter}':
                     star_element.click()
                     WebDriverWait(self.driver,10).until(EC.presence_of_element_located((By.CSS_SELECTOR,f'input[name="{star_val} star{s_letter}"]')))
                    
@@ -46,8 +53,8 @@ class BookingFiltration:
     
     def sort_price_lowest_first(self):
         
-        sort_by_dropdown = self.driver.find_element_by_css_selector('button[data-testid="sorters-dropdown-trigger"]').click()
-        price_lowest_to_highest = self.driver.find_element_by_css_selector('button[data-id="price"]').click()
+        sort_by_dropdown = self.driver.find_element(By.CSS_SELECTOR,'button[data-testid="sorters-dropdown-trigger"]').click()
+        price_lowest_to_highest = self.driver.find_element(By.CSS_SELECTOR,'button[data-id="price"]').click()
     
     
         

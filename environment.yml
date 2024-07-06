@@ -1,0 +1,8 @@
+name: salary_predictor
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+ - selenium
+ - prettytable
+#  - pyautogui
