@@ -107,7 +107,7 @@ class Booking(webdriver.Chrome):
         
     def apply_filtration(self):
         filtration = BookingFiltration(self)
-        filtration.apply_star_rating(1,2)
+        filtration.apply_star_rating(1,2,3)
         filtration.sort_price_lowest_first()
     
     def report_results(self):
@@ -123,14 +123,14 @@ class Booking(webdriver.Chrome):
             hotel_boxes = WebDriverWait(self,10).until(
                 EC.visibility_of_all_elements_located((By.CSS_SELECTOR,'div[data-testid="property-card-container"]'))
                 )
-            self.execute_script(f"window.scrollTo(0,document.body.scrollHeight-900);")
+            self.execute_script(f"window.scrollTo(0,document.body.scrollHeight-800);")
             
             
             
             report = BookingReport(hotel_boxes[current_row_count:])
                 # print(report.deal_box_attributes())
             new_data = report.deal_box_attributes()
-            table.add_rows(new_data[:desired_number_of_rows+1])
+            table.add_rows(new_data[:desired_number_of_rows])
             current_row_count = len(table.rows)
             
             print(f"Current number of rows: {current_row_count}")
